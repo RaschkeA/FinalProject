@@ -37,8 +37,10 @@ void draw() {
 class Game {
   int originX = 1920/2;
   int originY = 1080/2;
-  PVector pLoc = new PVector(originX, originY);
   int charSpeed = 2;
+  PVector pLoc = new PVector(originX, originY);
+  PVector velocity = new PVector(5, charSpeed);
+  PVector acceleration = new PVector(0, .15);
   boolean up = false;
   boolean right = false;
   boolean down = false;
@@ -108,21 +110,21 @@ class Game {
     if (key== 's') {
       down = true;
     }
-    if (key== 'd') {
+    if (key== 'd' && pLoc.x<width-20) {
       right = true;
     }
   }
   void moveChar() {
     if (up&&pLoc.y>0+charSpeed) {
-      pLoc.y-=charSpeed;
+      jumpo();
     }
-    if (right&&pLoc.x<width+charSpeed) {
+    if (right&&pLoc.x<width+charSpeed && pLoc.x<1910) {
       pLoc.x+=charSpeed;
     }
     if (down&&pLoc.y<height-charSpeed) {
       pLoc.y+=charSpeed;
     }
-    if (left&&pLoc.x>0-charSpeed) {
+    if (left&&pLoc.x>0-charSpeed && pLoc.x>10) {
       pLoc.x-=charSpeed;
     }
     if (keyPressed==false) {
@@ -131,6 +133,9 @@ class Game {
       down = false;
       left = false;
     }
+  }
+  void jump(){
+    
   }
   void debug() {
     fill(255);
