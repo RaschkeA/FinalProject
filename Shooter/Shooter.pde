@@ -25,7 +25,8 @@ void draw() {
     if (keyPressed) {
       run.keyPressed();
     }
-    run.moveChar();
+    run.gravity();
+    run.jump();
   }
   if (mousePressed) {
     run.mousePressed();
@@ -39,12 +40,13 @@ class Game {
   int originY = 1080/2;
   int charSpeed = 2;
   PVector pLoc = new PVector(originX, originY);
-  PVector velocity = new PVector(5, charSpeed);
+  PVector velocity = new PVector(charSpeed, 0);
   PVector acceleration = new PVector(0, .15);
   boolean up = false;
   boolean right = false;
   boolean down = false;
   boolean left = false;
+  boolean grav = false;
   void hud() {
     textSize (50);
     fill(255);
@@ -79,70 +81,76 @@ class Game {
   void newGame() {
     originX = 1920/2;
     originY = 1080/2;
-    pLoc = new PVector(originX, originY);
     charSpeed = 2;
+    pLoc = new PVector(originX, originY);
+    velocity = new PVector(charSpeed, 0);
+    acceleration = new PVector(0, .15);
     up = false;
     right = false;
     down = false;
     left = false;
+    grav = false;
   }
   void showChar() {
     fill(0, 102, 255);
     ellipse(pLoc.x, pLoc.y, 20, 20);
   }
-  void showMap(){
+  void showMap() {
     fill(200);
     noStroke();
     rect(0, 150, width, 200); //top ho
     rect(0, 440, width, 200); //middle ho
     rect(0, height-350, width, 200); //bottom ho
     rect(width/4, 150, 200, 780); //left vert
-    
   }
   void keyPressed() {
-    if (key == 'w') {
+    if (key == 'w'&&(pLoc.x>width/4+200 && pLoc.y>1080-165)&&!up) {
       up = true;
-      ;
     }
     if (key== 'a') {
-      left = true;
+      pLoc.x-=velocity.x;
     }
     if (key== 's') {
       down = true;
     }
     if (key== 'd' && pLoc.x<width-20) {
-      right = true;
+      pLoc.x+=velocity.x;
     }
   }
-  void moveChar() {
-    if (up&&pLoc.y>0+charSpeed) {
-      jumpo();
-    }
-    if (right&&pLoc.x<width+charSpeed && pLoc.x<1910) {
-      pLoc.x+=charSpeed;
-    }
-    if (down&&pLoc.y<height-charSpeed) {
-      pLoc.y+=charSpeed;
-    }
-    if (left&&pLoc.x>0-charSpeed && pLoc.x>10) {
-      pLoc.x-=charSpeed;
-    }
-    if (keyPressed==false) {
-      up = false;
-      right = false;
-      down = false;
-      left = false;
-    }
-  }
-  void jump(){
+  void moveChar(){
+    up = false;
     
+  }
+  void gravity() {
+    if (pLoc.x>width/4+200 && pLoc.y<1080-165) {
+      pLoc.y+=velocity.y;
+      velocity.add(acceleration);
+    }
+    if (pLoc.y==923) {
+      velocity.y = 0;
+    }
+  }
+  void jump() {
+    if (up) {
+      velocity.y = -6;
+      up = false;
+      grav = true;
+    }
+    if(grav){
+    pLoc.y+=velocity.y;
+    velocity.y+=acceleration.y;
+    if (pLoc.y>=900) {
+      grav = false;
+    }
+    }
   }
   void debug() {
     fill(255);
     textSize(18);
     text("Origin points: (" + originX + ", " + originY + ")\nKey Pressed: " + key + "\nX Position: " + pLoc.x + 
       "\nY Position: " + pLoc.y + "\nmouseX: " + mouseX + "\nmouseY: "
-      + mouseY + "\nScreen:" + screen, width-300, height-175);
+      + mouseY + "\nScreen:" + screen + "\nvelocity.x: " + velocity.x + "\nvelocity.y: " + velocity.y +
+      "\nacceleration: " + acceleration, width-300, height-270);
   }
   void showGrid() {
     for (int c = 0; c<width; c+=50) {
