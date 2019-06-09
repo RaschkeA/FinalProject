@@ -1,7 +1,6 @@
 # FinalProject
 
-# Project Title and purpose
-Quick shot - try to survive waves of enemies
+# Quick shot - try to survive waves of enemies
 One Paragraph of project description goes here
 Quick shot is a 2D platformer style game.  You have three different floors with a ladder to climb to get between them.  It has jump physics and a hard-coded gravity logic.  You would try to shoot all of the enemies, which would have been red squares, before they could reach the player.  
 ### Difficulties or opportunities you encountered along the way.
